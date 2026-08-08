@@ -1,0 +1,12 @@
+{
+  "version": "2",
+  "generator": "Ali Mahmood portfolio",
+  "author": "Ali Mahmood",
+  "animations": [
+    {
+      "id": "contact-success",
+      "src": "animations/contact-success.json",
+      "loop": false
+    }
+  ]
+}

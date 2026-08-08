@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" role="img" aria-labelledby="title">
+  <title id="title">Validated project details</title>
+  <circle cx="110" cy="110" r="73" fill="none" stroke="#79e3b2" stroke-opacity=".45" stroke-width="4"/>
+  <path d="M70 112l28 27 55-57" fill="none" stroke="#79e3b2" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

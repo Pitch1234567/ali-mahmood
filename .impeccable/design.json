@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-08T21:46:08.1979517+05:00",
+  "title": "Design System: Ali Mahmood Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "cyan-signal": {
+        "role": "primary",
+        "displayName": "Cyan Signal",
+        "canonical": "#68e1e7",
+        "tonalRamp": ["#062f33", "#0d4c52", "#176b72", "#258b92", "#39acb3", "#68e1e7", "#a6f1f4", "#e7fcfd"]
+      },
+      "night-field": {
+        "role": "neutral",
+        "displayName": "Night Field",
+        "canonical": "#080b10",
+        "tonalRamp": ["#05070a", "#080b10", "#101620", "#202a36", "#465260", "#778391", "#a5b0be", "#f4f7fa"]
+      },
+      "error": {
+        "role": "semantic",
+        "displayName": "Recovery Rose",
+        "canonical": "#ff9aa9",
+        "tonalRamp": ["#3a0d16", "#611824", "#8b2938", "#b84151", "#df6575", "#ff9aa9", "#ffc4cc", "#fff0f2"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Editorial Display", "purpose": "Hero promise only." },
+      "section": { "displayName": "Section Statement", "purpose": "Major section arguments." },
+      "title": { "displayName": "Project Title", "purpose": "Projects and process stage names." },
+      "body": { "displayName": "Reading Text", "purpose": "Explanations, summaries, and form content." },
+      "label": { "displayName": "Proofing Label", "purpose": "Technologies, status, and precise annotations." }
+    },
+    "shadows": [
+      { "name": "optical-float", "value": "0 28px 90px rgb(0 5 12 / 0.48)", "purpose": "High optical elevations only." },
+      { "name": "action-lift", "value": "0 14px 34px rgb(0 44 50 / 0.28)", "purpose": "Primary action at rest." },
+      { "name": "action-hover", "value": "0 18px 44px rgb(0 60 68 / 0.34)", "purpose": "Primary action hover feedback." }
+    ],
+    "motion": [
+      { "name": "feedback", "value": "120ms ease", "purpose": "Press and spatial response." },
+      { "name": "state", "value": "160ms ease", "purpose": "Color, border, and focus-state changes." },
+      { "name": "settle", "value": "240ms cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "Controlled material settling." },
+      { "name": "entrance", "value": "760ms cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "First-viewport choreography." },
+      { "name": "mobile-portrait", "value": "620-780ms cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "One-time image wipe and glass-plane assembly on the mobile hero." },
+      { "name": "mobile-menu", "value": "360ms enter / 220ms exit", "purpose": "Reversible sheet motion anchored to the mobile menu trigger." }
+    ],
+    "breakpoints": [
+      { "name": "compressed", "value": "1099px" },
+      { "name": "mobile", "value": "767px" },
+      { "name": "small-mobile", "value": "430px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The singular high-emphasis route toward starting a project.",
+      "html": "<button class=\"ds-primary\">Start a project <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M7 17 17 7M8 7h9v9\"/></svg></button>",
+      "css": ".ds-primary{min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:.65rem;border:0;border-radius:13px;background:#68e1e7;color:#061114;padding:0 1.35rem;font:780 1rem/1 Manrope,Arial,sans-serif;box-shadow:0 14px 34px rgb(0 44 50/.28);transition:transform 120ms ease,background-color 160ms ease,box-shadow 240ms cubic-bezier(.22,1,.36,1)}.ds-primary svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7}.ds-primary:hover{background:#83edf1;box-shadow:0 18px 44px rgb(0 60 68/.34);transform:translateY(-1px)}.ds-primary:active{transform:scale(.98)}.ds-primary:focus-visible{outline:2px solid #68e1e7;outline-offset:4px}"
+    },
+    {
+      "name": "Secondary Link",
+      "kind": "button",
+      "description": "A text-led secondary route that reveals cyan only on intent.",
+      "html": "<a class=\"ds-secondary\" href=\"#\">View selected work <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"m7 7 10 10M17 8v9H8\"/></svg></a>",
+      "css": ".ds-secondary{min-height:44px;display:inline-flex;align-items:center;gap:.55rem;border-bottom:1px solid transparent;color:#a5b0be;font:690 1rem/1.4 Manrope,Arial,sans-serif;text-decoration:none;transition:color 160ms ease,border-color 160ms ease,transform 120ms ease}.ds-secondary svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7}.ds-secondary:hover{color:#68e1e7;border-color:rgb(104 225 231/.55)}.ds-secondary:active{transform:translateY(1px)}.ds-secondary:focus-visible{outline:2px solid #68e1e7;outline-offset:4px}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "A labeled dark field with explicit focus and recovery states.",
+      "html": "<label class=\"ds-field\"><span>Name</span><input placeholder=\"Your full name\"></label>",
+      "css": ".ds-field{display:grid;gap:.5rem;color:#f4f7fa;font:680 .88rem/1.4 Manrope,Arial,sans-serif}.ds-field input{min-height:52px;border:1px solid rgb(255 255 255/.17);border-radius:13px;background:rgb(4 9 15/.52);padding:.8rem .95rem;color:#f4f7fa;font:400 1rem/1.6 Manrope,Arial,sans-serif;transition:border-color 160ms ease,background-color 160ms ease,box-shadow 160ms ease}.ds-field input::placeholder{color:#8793a2}.ds-field input:hover{border-color:rgb(255 255 255/.3)}.ds-field input:focus{border-color:#68e1e7;outline:0;background:rgb(7 15 22/.76);box-shadow:0 0 0 3px rgb(104 225 231/.12)}"
+    },
+    {
+      "name": "Floating Navigation",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "An optical pill that carries identity, section state, and the primary route.",
+      "html": "<nav class=\"ds-nav\"><strong>AM.</strong><span>About</span><span class=\"ds-nav-active\">Work</span><button>Start a project</button></nav>",
+      "css": ".ds-nav{min-height:64px;display:flex;align-items:center;gap:1.25rem;border:1px solid rgb(255 255 255/.2);border-radius:999px;background:linear-gradient(145deg,rgb(255 255 255/.1),transparent 34%),rgb(15 21 31/.74);padding:.42rem .46rem .42rem 1.35rem;color:#a5b0be;font:650 .87rem/1 Manrope,Arial,sans-serif;box-shadow:0 28px 90px rgb(0 5 12/.48);backdrop-filter:blur(22px) saturate(135%)}.ds-nav strong{margin-right:auto;color:#f4f7fa}.ds-nav-active{border:1px solid rgb(104 225 231/.18);border-radius:999px;background:rgb(104 225 231/.08);padding:.8rem 1rem;color:#f4f7fa}.ds-nav button{min-height:50px;border:0;border-radius:13px;background:#68e1e7;color:#061114;padding:0 1.2rem;font-weight:780}.ds-nav button:hover{background:#83edf1}.ds-nav button:focus-visible{outline:2px solid #68e1e7;outline-offset:4px}"
+    },
+    {
+      "name": "Concept Status",
+      "kind": "chip",
+      "description": "An unboxed proofing label that makes synthetic work explicit.",
+      "html": "<span class=\"ds-status\">Concept project</span>",
+      "css": ".ds-status{color:#68e1e7;font:500 .72rem/1.4 'JetBrains Mono',monospace;letter-spacing:.05em}"
+    },
+    {
+      "name": "Process Slab",
+      "kind": "card",
+      "description": "A shallow optical slab used only for the four project stages.",
+      "html": "<article class=\"ds-slab\"><span aria-hidden=\"true\"></span><h3>Refine</h3><p>Test real breakpoints, keyboard flow, motion settings, and performance.</p></article>",
+      "css": ".ds-slab{min-height:260px;display:flex;flex-direction:column;justify-content:flex-end;border:1px solid rgb(255 255 255/.2);border-radius:13px;background:linear-gradient(150deg,rgb(255 255 255/.06),transparent 32%),#0d121a;padding:2rem;color:#f4f7fa;box-shadow:0 28px 72px rgb(0 4 12/.42)}.ds-slab>span{width:72px;height:72px;margin-bottom:auto;border:1px solid rgb(255 255 255/.08);border-radius:40%;background:#141b26;transform:rotate(12deg)}.ds-slab h3{margin:0;font:590 1.7rem/1.1 Manrope,Arial,sans-serif}.ds-slab p{margin:.8rem 0 0;color:#a5b0be;font:400 .93rem/1.65 Manrope,Arial,sans-serif}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Night Glass Proofing Table",
+    "overview": "The portfolio behaves like a dark studio surface where work is inspected rather than advertised with spectacle. Wide editorial typography carries the argument; cinematic concept images and physical cyan route geometry provide the memorable second read. Depth is local, responsive, and earned. Optical glass belongs to interactive elevations such as the floating navigation, portrait plate, dialog, and project brief. The surrounding content stays flat and spacious so the hierarchy remains direct.",
+    "keyCharacteristics": [
+      "Near-black editorial fields with one icy cyan signal.",
+      "Wide, low-weight headings paired with quiet technical labels.",
+      "Asymmetric compositions and substantial negative space.",
+      "Authored raster material for image-native moments.",
+      "Short, calm motion with explicit reduced-motion behavior."
+    ],
+    "rules": [
+      { "name": "The One Signal Rule", "body": "Cyan identifies a route, action, current state, or focus. It is not a decorative wash.", "section": "colors" },
+      { "name": "The Wide Statement Rule", "body": "Prefer fewer, wider lines over narrow stacked headlines. Desktop hero copy stays at two lines.", "section": "typography" },
+      { "name": "The Earned Glass Rule", "body": "Blur belongs only to surfaces that float, move, or temporarily hold focus. Ordinary content never receives glass by default.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep cyan rare enough that the primary action and current state remain obvious.",
+      "Do use genuine raster material when an image is responsible for atmosphere or physical depth.",
+      "Do pair large statements with quiet supporting copy and substantial negative space.",
+      "Do preserve keyboard focus, reduced motion, reduced transparency, increased contrast, and forced-color adaptations."
+    ],
+    "donts": [
+      "Don't introduce rainbow gradients, neon cyberpunk grids, decorative code, or fake terminal chrome.",
+      "Don't turn every content group into a rounded card or every surface into glass.",
+      "Don't invent client claims, repositories, live links, locations, availability, or contact details.",
+      "Don't use decorative eyebrow kickers, gradient text, glyph arrows, or hard offset shadows."
+    ]
+  }
+}

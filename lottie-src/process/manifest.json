@@ -1,0 +1,12 @@
+{
+  "version": "2",
+  "generator": "Ali Mahmood portfolio",
+  "author": "Ali Mahmood",
+  "animations": [
+    {
+      "id": "process-route",
+      "src": "animations/process-route.json",
+      "loop": false
+    }
+  ]
+}
