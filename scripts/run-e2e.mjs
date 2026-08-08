@@ -1,20 +1,25 @@
 import { spawn, spawnSync } from "node:child_process";
 
 const port = "3100";
-const origin = `http://127.0.0.1:${port}`;
-const server = spawn(
-  process.execPath,
-  ["node_modules/next/dist/bin/next", "start", "--hostname", "127.0.0.1", "--port", port],
-  {
-    cwd: process.cwd(),
-    env: {
-      ...process.env,
-      CONTACT_ALLOWED_ORIGIN: origin,
-    },
-    stdio: "ignore",
-    windowsHide: true,
-  },
-);
+const useExternalServer = Boolean(process.env.PORTFOLIO_E2E_EXTERNAL_SERVER);
+const origin = useExternalServer
+  ? (process.env.PORTFOLIO_E2E_ORIGIN ?? `http://127.0.0.1:${port}`)
+  : `http://127.0.0.1:${port}`;
+const server = useExternalServer
+  ? null
+  : spawn(
+      process.execPath,
+      ["node_modules/next/dist/bin/next", "start", "--hostname", "127.0.0.1", "--port", port],
+      {
+        cwd: process.cwd(),
+        env: {
+          ...process.env,
+          CONTACT_ALLOWED_ORIGIN: origin,
+        },
+        stdio: "ignore",
+        windowsHide: true,
+      },
+    );
 
 async function waitForServer() {
   const deadline = Date.now() + 30_000;
@@ -30,6 +35,8 @@ async function waitForServer() {
 }
 
 function stopServerTree() {
+  if (!server) return;
+
   if (process.platform === "win32") {
     spawnSync("taskkill", ["/PID", String(server.pid), "/T", "/F"], {
       stdio: "ignore",

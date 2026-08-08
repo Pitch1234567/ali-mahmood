@@ -1,9 +1,8 @@
 "use client";
 
-import * as Dialog from "@radix-ui/react-dialog";
 import { List, X } from "@phosphor-icons/react";
 import { m, useScroll } from "motion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { navigation, type SectionId } from "@/content/site";
 
@@ -14,6 +13,8 @@ const desktopLinks = navigation.filter(
 export function FloatingNav() {
   const [active, setActive] = useState<SectionId>("home");
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuTriggerRef = useRef<HTMLButtonElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
 
   useEffect(() => {
@@ -36,7 +37,30 @@ export function FloatingNav() {
     return () => observer.disconnect();
   }, []);
 
-  const closeMenu = () => setMenuOpen(false);
+  const closeMenu = () => {
+    const menu = mobileMenuRef.current;
+    setMenuOpen(false);
+
+    if (menu && typeof menu.hidePopover === "function" && menu.matches(":popover-open")) {
+      menu.hidePopover();
+      return;
+    }
+
+    menuTriggerRef.current?.focus();
+  };
+
+  const handleTouchOpen = (event: React.PointerEvent<HTMLButtonElement>) => {
+    if (event.pointerType !== "touch") return;
+
+    const menu = mobileMenuRef.current;
+    if (!menu || typeof menu.showPopover !== "function") {
+      setMenuOpen(true);
+      return;
+    }
+
+    event.preventDefault();
+    if (!menu.matches(":popover-open")) menu.showPopover();
+  };
 
   return (
     <header className="site-nav-shell">
@@ -83,48 +107,68 @@ export function FloatingNav() {
           Start a project
         </a>
 
-        <Dialog.Root open={menuOpen} onOpenChange={setMenuOpen}>
-          <Dialog.Trigger asChild>
+        <button
+          ref={menuTriggerRef}
+          className="menu-trigger"
+          type="button"
+          aria-label="Open navigation menu"
+          aria-controls="mobile-navigation-dialog"
+          aria-expanded={menuOpen}
+          aria-haspopup="dialog"
+          data-open={menuOpen}
+          popoverTarget="mobile-navigation-dialog"
+          popoverTargetAction="toggle"
+          onPointerDown={handleTouchOpen}
+          onClick={() => {
+            const menu = mobileMenuRef.current;
+            if (!menu || typeof menu.showPopover !== "function") setMenuOpen(true);
+          }}
+        >
+          <List aria-hidden="true" size={22} weight="regular" />
+        </button>
+
+        <div
+          ref={mobileMenuRef}
+          className="mobile-menu glass-surface"
+          id="mobile-navigation-dialog"
+          popover="auto"
+          role="dialog"
+          aria-labelledby="mobile-navigation-title"
+          data-fallback-open={menuOpen ? "true" : undefined}
+          onToggle={(event) => {
+            const isOpen = event.currentTarget.matches(":popover-open");
+            setMenuOpen(isOpen);
+            if (!isOpen) menuTriggerRef.current?.focus();
+          }}
+        >
+          <div className="mobile-menu-topline">
+            <h2 className="mobile-menu-title" id="mobile-navigation-title">Navigate</h2>
             <button
-              className="menu-trigger"
+              className="icon-button"
               type="button"
-              aria-label="Open navigation menu"
-              aria-expanded={menuOpen}
-              data-open={menuOpen}
+              aria-label="Close navigation menu"
+              onClick={closeMenu}
             >
-              <List aria-hidden="true" size={22} weight="regular" />
+              <X aria-hidden="true" size={22} weight="regular" />
             </button>
-          </Dialog.Trigger>
-          <Dialog.Portal>
-            <Dialog.Overlay className="menu-overlay" />
-            <Dialog.Content className="mobile-menu glass-surface" aria-describedby={undefined}>
-              <div className="mobile-menu-topline">
-                <Dialog.Title>Navigate</Dialog.Title>
-                <Dialog.Close asChild>
-                  <button className="icon-button" type="button" aria-label="Close navigation menu">
-                    <X aria-hidden="true" size={22} weight="regular" />
-                  </button>
-                </Dialog.Close>
-              </div>
-              <div className="mobile-menu-links">
-                {navigation.map(({ id, label }) => {
-                  const finalLabel = id === "contact" ? "Start a project" : label;
-                  return (
-                    <a
-                      key={id}
-                      href={`#${id}`}
-                      onClick={closeMenu}
-                      aria-current={active === id ? "location" : undefined}
-                    >
-                      <span>{finalLabel}</span>
-                      <span className="mobile-link-rule" aria-hidden="true" />
-                    </a>
-                  );
-                })}
-              </div>
-            </Dialog.Content>
-          </Dialog.Portal>
-        </Dialog.Root>
+          </div>
+          <div className="mobile-menu-links">
+            {navigation.map(({ id, label }) => {
+              const finalLabel = id === "contact" ? "Start a project" : label;
+              return (
+                <a
+                  key={id}
+                  href={`#${id}`}
+                  onClick={closeMenu}
+                  aria-current={active === id ? "location" : undefined}
+                >
+                  <span>{finalLabel}</span>
+                  <span className="mobile-link-rule" aria-hidden="true" />
+                </a>
+              );
+            })}
+          </div>
+        </div>
       </nav>
     </header>
   );

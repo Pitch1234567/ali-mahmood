@@ -30,7 +30,18 @@ test("navigation and the mobile menu reach the intended sections", async ({ page
 
   if (testInfo.project.name === "mobile") {
     const trigger = page.getByRole("button", { name: "Open navigation menu" });
-    await trigger.click();
+    const triggerBox = await trigger.boundingBox();
+    expect(triggerBox).not.toBeNull();
+    const hitTarget = await page.evaluate(({ x, y }) => {
+      const target = document.elementFromPoint(x, y);
+      return target?.closest("button")?.getAttribute("aria-label") ?? null;
+    }, {
+      x: triggerBox!.x + triggerBox!.width / 2,
+      y: triggerBox!.y + triggerBox!.height / 2,
+    });
+    expect(hitTarget).toBe("Open navigation menu");
+
+    await trigger.tap();
     const mobileMenu = page.getByRole("dialog", { name: "Navigate" });
     await expect(mobileMenu).toBeVisible();
     await expect(mobileMenu).toHaveCSS("animation-name", "mobile-menu-in");
@@ -38,11 +49,11 @@ test("navigation and the mobile menu reach the intended sections", async ({ page
       "animation-name",
       "mobile-menu-link-in",
     );
-    await page.getByRole("link", { name: "Work" }).click();
+    await mobileMenu.getByRole("link", { name: "Work", exact: true }).click();
     await expect(page).toHaveURL(/#work$/);
     await expect(page.getByRole("dialog", { name: "Navigate" })).toBeHidden();
 
-    await trigger.click();
+    await trigger.tap();
     await page.keyboard.press("Escape");
     await expect(trigger).toBeFocused();
   } else {
@@ -53,6 +64,28 @@ test("navigation and the mobile menu reach the intended sections", async ({ page
       "location",
     );
   }
+});
+
+test("mobile navigation opens natively before hydration", async ({ browser }, testInfo) => {
+  test.skip(testInfo.project.name !== "mobile");
+
+  const context = await browser.newContext({
+    viewport: { width: 360, height: 640 },
+    deviceScaleFactor: 3,
+    hasTouch: true,
+    isMobile: true,
+    javaScriptEnabled: false,
+  });
+  const page = await context.newPage();
+
+  await page.goto("/");
+  await page.getByRole("button", { name: "Open navigation menu" }).tap();
+  const nativeMenu = page.locator("#mobile-navigation-dialog");
+  await expect(nativeMenu).toBeVisible();
+  await expect(nativeMenu).toHaveAttribute("role", "dialog");
+  await expect(nativeMenu.getByRole("heading", { name: "Navigate" })).toBeVisible();
+
+  await context.close();
 });
 
 test("concept notes load locally and restore focus", async ({ page }) => {
