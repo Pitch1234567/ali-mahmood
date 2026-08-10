@@ -49,6 +49,12 @@ test("navigation and the mobile menu reach the intended sections", async ({ page
       "animation-name",
       "mobile-menu-link-in",
     );
+
+    await mobileMenu.getByRole("button", { name: "Close navigation menu" }).tap();
+    await expect(mobileMenu).toBeHidden();
+    await expect(trigger).toBeFocused();
+
+    await trigger.tap();
     await mobileMenu.getByRole("link", { name: "Work", exact: true }).click();
     await expect(page).toHaveURL(/#work$/);
     await expect(page.getByRole("dialog", { name: "Navigate" })).toBeHidden();
@@ -84,6 +90,9 @@ test("mobile navigation opens natively before hydration", async ({ browser }, te
   await expect(nativeMenu).toBeVisible();
   await expect(nativeMenu).toHaveAttribute("role", "dialog");
   await expect(nativeMenu.getByRole("heading", { name: "Navigate" })).toBeVisible();
+
+  await nativeMenu.getByRole("button", { name: "Close navigation menu" }).tap();
+  await expect(nativeMenu).toBeHidden();
 
   await context.close();
 });

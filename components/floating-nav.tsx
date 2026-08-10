@@ -147,6 +147,8 @@ export function FloatingNav() {
               className="icon-button"
               type="button"
               aria-label="Close navigation menu"
+              popoverTarget="mobile-navigation-dialog"
+              popoverTargetAction="hide"
               onClick={closeMenu}
             >
               <X aria-hidden="true" size={22} weight="regular" />
