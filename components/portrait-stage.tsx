@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { m, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
 
-import portrait from "@/public/images/portrait-placeholder.png";
+import portrait from "@/public/images/ali-mahmood-portrait.jpeg";
 
 export function PortraitStage() {
   const reduceMotion = useReducedMotion();
@@ -45,7 +45,7 @@ export function PortraitStage() {
           <div className="portrait-image-plane">
             <Image
               src={portrait}
-              alt="Abstract sculptural portrait placeholder for Ali Mahmood"
+              alt="Portrait of Ali Mahmood"
               sizes="(max-width: 767px) 86vw, (max-width: 1099px) 58vw, 38vw"
               fetchPriority="high"
               className="portrait-image"
@@ -55,7 +55,6 @@ export function PortraitStage() {
           <span className="portrait-reflection" aria-hidden="true" />
         </m.div>
       </div>
-      <figcaption>Portrait placeholder. Replace with Ali&apos;s photograph.</figcaption>
     </figure>
   );
 }

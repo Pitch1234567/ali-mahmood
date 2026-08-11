@@ -49,19 +49,6 @@ export function FloatingNav() {
     menuTriggerRef.current?.focus();
   };
 
-  const handleTouchOpen = (event: React.PointerEvent<HTMLButtonElement>) => {
-    if (event.pointerType !== "touch") return;
-
-    const menu = mobileMenuRef.current;
-    if (!menu || typeof menu.showPopover !== "function") {
-      setMenuOpen(true);
-      return;
-    }
-
-    event.preventDefault();
-    if (!menu.matches(":popover-open")) menu.showPopover();
-  };
-
   return (
     <header className="site-nav-shell">
       <nav className="site-nav glass-surface" aria-label="Primary navigation">
@@ -118,11 +105,6 @@ export function FloatingNav() {
           data-open={menuOpen}
           popoverTarget="mobile-navigation-dialog"
           popoverTargetAction="toggle"
-          onPointerDown={handleTouchOpen}
-          onClick={() => {
-            const menu = mobileMenuRef.current;
-            if (!menu || typeof menu.showPopover !== "function") setMenuOpen(true);
-          }}
         >
           <List aria-hidden="true" size={22} weight="regular" />
         </button>
@@ -134,7 +116,6 @@ export function FloatingNav() {
           popover="auto"
           role="dialog"
           aria-labelledby="mobile-navigation-title"
-          data-fallback-open={menuOpen ? "true" : undefined}
           onToggle={(event) => {
             const isOpen = event.currentTarget.matches(":popover-open");
             setMenuOpen(isOpen);
