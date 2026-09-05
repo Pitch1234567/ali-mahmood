@@ -37,17 +37,11 @@ The Playwright suite uses Microsoft Edge and checks desktop and mobile layouts, 
 
 ## Contact behavior
 
-The form validates on the client and again in `POST /api/contact`. The route includes a same-origin check, request-size limit, honeypot, in-memory rate limit, delivery timeout, HTML escaping, and a Resend delivery adapter. It never logs or persists enquiry contents.
+The visible form validates in the browser and prepares a draft addressed to `aalimahmood2006@gmail.com`. Desktop viewports from 768px open Gmail Compose directly in a new browser tab; mobile viewports keep the standards-based `mailto:` handoff to the visitor's existing email app. Name, reply email, company, project type, and project details are inserted automatically. The site does not submit or store the enquiry, preserves the completed fields, and reports only that a draft opened—not that an email was sent.
 
-Copy `.env.example` to `.env.local` and set:
+`NEXT_PUBLIC_CONTACT_EMAIL` can override the committed public recipient at build time. The verified address above is the built-in fallback, so the contact flow also works without an environment file. Desktop visitors need browser access to Gmail and may be asked to sign in. Mobile visitors need a default email app or browser `mailto:` handler. After the draft opens, they review it and press Send.
 
-- `RESEND_API_KEY`
-- `CONTACT_TO_EMAIL`
-- `CONTACT_FROM_EMAIL`
-- `CONTACT_ALLOWED_ORIGIN` using the exact public origin
-- `NEXT_PUBLIC_CONTACT_EMAIL` for the visible direct-email fallback
-
-Without the three server delivery values, the form returns an honest configuration error and never simulates success. A successful delivery plays the existing contact Lottie once.
+The repository still includes the isolated `POST /api/contact` Resend adapter and its server-side validation tests for a possible future direct-delivery mode. The current form does not call it. Its optional settings remain documented in `.env.example`.
 
 ## Deployment metadata
 

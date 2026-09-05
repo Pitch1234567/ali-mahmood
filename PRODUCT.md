@@ -25,10 +25,10 @@ The portfolio is a single-page website with six anchored sections: Home, About, 
 ## Capabilities and Constraints
 
 - The site is built with Next.js, React, TypeScript, and Tailwind CSS.
-- The first version is a polished frontend experience. It does not send email or fetch GitHub data.
-- The contact form validates on the client and server, delivers through Resend when configured, and reports an honest setup error otherwise.
+- The first version is a polished frontend experience. It does not fetch GitHub data or store contact enquiries.
+- The contact form validates in the browser and opens a pre-addressed draft containing every completed field. Desktop opens Gmail Compose in a new tab; mobile preserves the existing default-email-app handoff. The visitor reviews the draft and presses Send.
 - ServiceSpark, FocusFlow, and TableReady are concept projects, not client work.
-- Missing email, GitHub, LinkedIn, repository, and live-site destinations are shown only as noninteractive pending states.
+- Missing GitHub, LinkedIn, repository, and live-site destinations are shown only as noninteractive pending states.
 - The page includes exactly two purposeful dotLottie moments with static fallbacks.
 - A hint of 3D means layered, responsive DOM composition rather than a WebGL scene.
 - Location and availability are intentionally omitted until Ali confirms them.
@@ -46,7 +46,7 @@ The portfolio is a single-page website with six anchored sections: Home, About, 
 ## Evidence on Hand
 
 - `PRD.md` supplies the initial audience, offer, services, project concepts, and copy direction.
-- No real portrait, client case studies, project repositories, live project URLs, social URLs, contact address, testimonials, or performance outcomes are currently available. Missing public destinations are omitted until verified values are configured.
+- No real portrait, client case studies, project repositories, live project URLs, social URLs, testimonials, or performance outcomes are currently available. The public contact address is `aalimahmood2006@gmail.com`; other missing destinations are omitted until verified values are configured.
 - Generated imagery must be labeled as concept material wherever a visitor could mistake it for real project evidence.
 
 ## Product Principles

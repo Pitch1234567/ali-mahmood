@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 
 import { MotionProvider } from "@/components/motion-provider";
+import { resolveContactEmail } from "@/lib/contact";
 import { getSiteUrl } from "@/lib/site-url";
 
 import "./globals.css";
@@ -63,7 +64,7 @@ const sameAs = [
   }
 });
 
-const publicEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim();
+const publicEmail = resolveContactEmail(process.env.NEXT_PUBLIC_CONTACT_EMAIL);
 
 const personJsonLd = {
   "@context": "https://schema.org",
@@ -71,7 +72,7 @@ const personJsonLd = {
   name: "Ali Mahmood",
   jobTitle: "Web developer",
   url: deploymentOrigin.toString(),
-  ...(publicEmail ? { email: publicEmail } : {}),
+  email: publicEmail,
   ...(sameAs.length > 0 ? { sameAs } : {}),
 };
 

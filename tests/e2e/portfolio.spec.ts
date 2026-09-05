@@ -114,7 +114,35 @@ test("concept notes load locally and restore focus", async ({ page }) => {
   await expect(trigger).toBeFocused();
 });
 
-test("contact validates locally and reports missing delivery configuration honestly", async ({ page }) => {
+test("contact opens Gmail on desktop and preserves mailto on mobile", async ({ context, page }, testInfo) => {
+  const desktop = testInfo.project.name === "desktop";
+
+  if (desktop) {
+    await context.route("https://mail.google.com/**", async (route) => {
+      await route.fulfill({
+        body: "<!doctype html><title>Gmail Compose Test</title>",
+        contentType: "text/html",
+        status: 200,
+      });
+    });
+  }
+
+  await page.addInitScript(() => {
+    const nativeClick = HTMLAnchorElement.prototype.click;
+    HTMLAnchorElement.prototype.click = function click() {
+      if (this.protocol === "mailto:") {
+        Object.defineProperty(window, "__openedMailto", {
+          configurable: true,
+          value: this.href,
+          writable: true,
+        });
+        return;
+      }
+
+      nativeClick.call(this);
+    };
+  });
+
   await page.goto("/#contact");
 
   await page.getByRole("button", { name: "Send project details" }).click();
@@ -122,10 +150,12 @@ test("contact validates locally and reports missing delivery configuration hones
   await expect(page.locator("#name")).toBeFocused();
 
   await page.locator("#name").fill("Ali Test");
-  await page.locator("#email").fill("ali@example.com");
-  await page.locator("#company").fill("Example Studio");
+  await page.locator("#email").fill("ali+website@example.com");
+  await page.locator("#company").fill("Example Studio & Co.");
   await page.locator("#projectType").selectOption("Business website");
-  await page.locator("#message").fill("I need a clear website for a small service business within the next quarter.");
+  await page.locator("#message").fill(
+    "I need a clear website for a small service business.\nPlease include mobile booking & an Urdu contact option.",
+  );
 
   const outbound: string[] = [];
   page.on("request", (request) => {
@@ -134,17 +164,61 @@ test("contact validates locally and reports missing delivery configuration hones
     }
   });
 
-  const responsePromise = page.waitForResponse(
-    (response) =>
-      response.request().method() === "POST" &&
-      new URL(response.url()).pathname === "/api/contact",
-  );
+  const popupPromise = desktop ? page.waitForEvent("popup") : Promise.resolve(null);
   await page.getByRole("button", { name: "Send project details" }).click();
-  const response = await responsePromise;
+  const popup = await popupPromise;
 
-  expect(response.status()).toBe(503);
-  await expect(page.getByText("Delivery is not configured in this deployment.")).toBeVisible();
-  expect(outbound).toEqual(["POST /api/contact"]);
+  if (popup) await popup.waitForLoadState("domcontentloaded");
+
+  await expect(page.getByText(/Email draft opened/)).toBeVisible();
+  await expect(page.getByRole("button", { name: "Open email draft again" })).toBeVisible();
+
+  const mailtoHref = desktop
+    ? undefined
+    : await page.evaluate(
+        () => (window as Window & { __openedMailto?: string }).__openedMailto,
+      );
+  const draftHref = popup?.url() ?? mailtoHref;
+  expect(draftHref).toBeTruthy();
+
+  const draft = new URL(draftHref!);
+
+  if (desktop) {
+    expect(draft.origin).toBe("https://mail.google.com");
+    expect(draft.pathname).toBe("/mail/");
+    expect(draft.searchParams.get("view")).toBe("cm");
+    expect(draft.searchParams.get("fs")).toBe("1");
+    expect(draft.searchParams.get("to")).toBe("aalimahmood2006@gmail.com");
+    expect(draft.searchParams.get("su")).toBe(
+      "Project enquiry: Business website from Ali Test",
+    );
+    await expect(popup!).toHaveTitle("Gmail Compose Test");
+    expect(await popup!.opener()).toBeNull();
+  } else {
+    expect(draft.protocol).toBe("mailto:");
+    expect(draft.pathname).toBe("aalimahmood2006@gmail.com");
+    expect(draft.searchParams.get("subject")).toBe(
+      "Project enquiry: Business website from Ali Test",
+    );
+  }
+
+  const subject = draft.searchParams.get(desktop ? "su" : "subject");
+  expect(subject).toBe(
+    "Project enquiry: Business website from Ali Test",
+  );
+
+  const body = draft.searchParams.get("body");
+  expect(body).toContain("Name: Ali Test");
+  expect(body).toContain("Email: ali+website@example.com");
+  expect(body).toContain("Company: Example Studio & Co.");
+  expect(body).toContain("Project type: Business website");
+  expect(body).toContain(
+    "Project details:\r\nI need a clear website for a small service business.\r\nPlease include mobile booking & an Urdu contact option.",
+  );
+
+  await expect(page.locator("#name")).toHaveValue("Ali Test");
+  await expect(page.locator("#message")).toHaveValue(/mobile booking/);
+  expect(outbound).toEqual([]);
 });
 
 test("contact endpoint validates on the server and absorbs honeypot submissions", async ({ request }) => {

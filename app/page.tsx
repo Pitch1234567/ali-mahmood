@@ -12,6 +12,7 @@ import { TiltCard } from "@/components/tilt-card";
 import {
   processSteps,
   projects,
+  publicContactEmail,
   services,
   siteProfile,
   type LinkState,
@@ -65,15 +66,6 @@ export default function Home() {
   const supportingProjects = projects.filter((project) => !project.featured);
   const profileLinks = [siteProfile.email, siteProfile.github, siteProfile.linkedin].filter(
     (link): link is Extract<LinkState, { status: "ready" }> => link.status === "ready",
-  );
-  const contactEmail =
-    siteProfile.email.status === "ready"
-      ? siteProfile.email.label
-      : undefined;
-  const deliveryConfigured = Boolean(
-    process.env.RESEND_API_KEY &&
-      process.env.CONTACT_TO_EMAIL &&
-      process.env.CONTACT_FROM_EMAIL,
   );
 
   return (
@@ -209,8 +201,7 @@ export default function Home() {
             </Reveal>
             <Reveal delay={0.08}>
               <ContactForm
-                deliveryConfigured={deliveryConfigured}
-                contactEmail={contactEmail}
+                contactEmail={publicContactEmail}
               />
             </Reveal>
           </div>

@@ -6,6 +6,8 @@ export const projectTypes = [
   "Ongoing maintenance",
 ] as const;
 
+export const defaultContactEmail = "aalimahmood2006@gmail.com";
+
 export type ProjectType = (typeof projectTypes)[number];
 export type ContactFieldName = "name" | "email" | "company" | "projectType" | "message";
 
@@ -41,6 +43,11 @@ export const contactLimits = {
 } as const;
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export function resolveContactEmail(value: string | undefined) {
+  const email = value?.trim();
+  return email && emailPattern.test(email) ? email : defaultContactEmail;
+}
 
 function readString(value: unknown) {
   return typeof value === "string" ? value : "";
@@ -88,5 +95,53 @@ export function validateContactValues(values: ContactFormValues): ContactErrors 
   }
 
   return errors;
+}
+
+function createContactDraftContent(values: ContactFormValues) {
+  const subject = `Project enquiry: ${values.projectType} from ${values.name}`;
+  const message = values.message.replace(/\r?\n/g, "\r\n");
+  const body = [
+    "Hello Ali,",
+    "",
+    "I would like to discuss the following project:",
+    "",
+    `Name: ${values.name}`,
+    `Email: ${values.email}`,
+    `Company: ${values.company || "Not provided"}`,
+    `Project type: ${values.projectType}`,
+    "",
+    "Project details:",
+    message,
+    "",
+    "Thank you,",
+    values.name,
+  ].join("\r\n");
+
+  return { body, subject };
+}
+
+export function createContactMailtoHref(
+  recipient: string,
+  values: ContactFormValues,
+) {
+  const { body, subject } = createContactDraftContent(values);
+
+  return `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+export function createContactGmailHref(
+  recipient: string,
+  values: ContactFormValues,
+) {
+  const { body, subject } = createContactDraftContent(values);
+  const params = new URLSearchParams({
+    body,
+    fs: "1",
+    su: subject,
+    to: recipient,
+    view: "cm",
+  });
+
+  return `https://mail.google.com/mail/?${params.toString()}`;
 }
 

@@ -1,5 +1,7 @@
 import type { StaticImageData } from "next/image";
 
+import { resolveContactEmail } from "@/lib/contact";
+
 import focusFlowCover from "@/public/images/focusflow-cover.png";
 import serviceSparkCover from "@/public/images/servicespark-cover.png";
 import tableReadyCover from "@/public/images/tableready-cover.png";
@@ -76,11 +78,15 @@ export const navigation: Array<{ id: SectionId; label: string }> = [
   { id: "contact", label: "Contact" },
 ];
 
+export const publicContactEmail = resolveContactEmail(
+  process.env.NEXT_PUBLIC_CONTACT_EMAIL,
+);
+
 export const siteProfile = {
   name: "Ali Mahmood",
   role: "Web developer",
   portraitIsPlaceholder: true,
-  email: emailLink(process.env.NEXT_PUBLIC_CONTACT_EMAIL),
+  email: emailLink(publicContactEmail),
   github: externalLink(
     process.env.NEXT_PUBLIC_GITHUB_URL,
     "GitHub",

@@ -1,14 +1,15 @@
 "use client";
 
 import { ArrowUpRight } from "@phosphor-icons/react";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 import {
   contactLimits,
+  createContactGmailHref,
+  createContactMailtoHref,
   normalizeContactValues,
   projectTypes,
   validateContactValues,
-  type ContactApiResponse,
   type ContactErrors,
   type ContactFieldName,
   type ContactFormValues,
@@ -18,11 +19,7 @@ import { LottieVisual } from "./lottie-visual";
 type FormStatus =
   | "idle"
   | "invalid"
-  | "submitting"
-  | "success"
-  | "configuration-error"
-  | "rate-limited"
-  | "error";
+  | "draft-opened";
 
 const initialValues: ContactFormValues = {
   name: "",
@@ -33,21 +30,14 @@ const initialValues: ContactFormValues = {
 };
 
 interface ContactFormProps {
-  deliveryConfigured: boolean;
-  contactEmail?: string;
+  contactEmail: string;
 }
 
-export function ContactForm({ deliveryConfigured, contactEmail }: ContactFormProps) {
+export function ContactForm({ contactEmail }: ContactFormProps) {
   const [values, setValues] = useState<ContactFormValues>(initialValues);
   const [errors, setErrors] = useState<ContactErrors>({});
   const [status, setStatus] = useState<FormStatus>("idle");
-  const [website, setWebsite] = useState("");
   const [playToken, setPlayToken] = useState(0);
-  const abortRef = useRef<AbortController | null>(null);
-
-  useEffect(() => {
-    return () => abortRef.current?.abort();
-  }, []);
 
   function updateField(field: ContactFieldName, value: string) {
     setValues((current) => ({ ...current, [field]: value }));
@@ -60,9 +50,8 @@ export function ContactForm({ deliveryConfigured, contactEmail }: ContactFormPro
     setErrors((current) => ({ ...current, [field]: nextErrors[field] }));
   }
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (status === "submitting") return;
 
     const normalizedValues = normalizeContactValues(values);
     const nextErrors = validateContactValues(normalizedValues);
@@ -75,57 +64,25 @@ export function ContactForm({ deliveryConfigured, contactEmail }: ContactFormPro
       return;
     }
 
-    setStatus("submitting");
-    abortRef.current?.abort();
-    const controller = new AbortController();
-    abortRef.current = controller;
-    const timeout = window.setTimeout(() => controller.abort(), 12_000);
+    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+    const draftLink = document.createElement("a");
+    draftLink.href = isDesktop
+      ? createContactGmailHref(contactEmail, normalizedValues)
+      : createContactMailtoHref(contactEmail, normalizedValues);
+    draftLink.hidden = true;
 
-    try {
-      const submissionId =
-        globalThis.crypto?.randomUUID?.() ??
-        `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...normalizedValues,
-          website,
-          submissionId,
-        }),
-        signal: controller.signal,
-      });
-      const payload = (await response.json()) as ContactApiResponse;
-
-      if (response.ok && payload.ok) {
-        setValues(initialValues);
-        setWebsite("");
-        setStatus("success");
-        setPlayToken((token) => token + 1);
-        return;
-      }
-
-      if (!payload.ok && payload.errors) {
-        setErrors(payload.errors);
-        const firstInvalid = Object.keys(payload.errors)[0] as ContactFieldName | undefined;
-        if (firstInvalid) document.getElementById(firstInvalid)?.focus();
-      }
-
-      if (!payload.ok && payload.code === "NOT_CONFIGURED") {
-        setStatus("configuration-error");
-      } else if (!payload.ok && payload.code === "RATE_LIMITED") {
-        setStatus("rate-limited");
-      } else if (!payload.ok && payload.code === "VALIDATION_ERROR") {
-        setStatus("invalid");
-      } else {
-        setStatus("error");
-      }
-    } catch {
-      setStatus("error");
-    } finally {
-      window.clearTimeout(timeout);
-      if (abortRef.current === controller) abortRef.current = null;
+    if (isDesktop) {
+      draftLink.target = "_blank";
+      draftLink.rel = "noopener noreferrer";
     }
+
+    document.body.append(draftLink);
+
+    setValues(normalizedValues);
+    setStatus("draft-opened");
+    setPlayToken((token) => token + 1);
+    draftLink.click();
+    draftLink.remove();
   }
 
   const fieldProps = (field: ContactFieldName) => ({
@@ -138,42 +95,29 @@ export function ContactForm({ deliveryConfigured, contactEmail }: ContactFormPro
   });
 
   const submitLabel =
-    status === "submitting"
-      ? "Sending securely"
-      : status === "success"
-        ? "Message sent"
-        : "Send project details";
+    status === "draft-opened"
+      ? "Open email draft again"
+      : "Send project details";
 
   return (
     <form
       className="contact-form glass-surface"
+      action={`mailto:${contactEmail}?subject=New%20website%20project%20enquiry`}
+      method="post"
+      encType="text/plain"
       onSubmit={handleSubmit}
-      aria-busy={status === "submitting"}
       noValidate
     >
       <p className="delivery-disclosure">
-        {deliveryConfigured
-          ? "Sent directly to Ali. This site does not keep a database copy."
-          : "Delivery is ready in code and activates when the launch email settings are added."}
+        Complete the form, then this button will open a ready-to-send email in your email app.
       </p>
-      <div className="form-trap" aria-hidden="true">
-        <label htmlFor="website">Website</label>
-        <input
-          id="website"
-          name="website"
-          type="text"
-          value={website}
-          tabIndex={-1}
-          autoComplete="off"
-          onChange={(event) => setWebsite(event.target.value)}
-        />
-      </div>
       <div className="contact-fields-grid">
         <div className="field-group">
           <label htmlFor="name">Name</label>
           <input
             {...fieldProps("name")}
             type="text"
+            required
             autoComplete="name"
             maxLength={contactLimits.name}
             placeholder="Your full name"
@@ -187,6 +131,7 @@ export function ContactForm({ deliveryConfigured, contactEmail }: ContactFormPro
           <input
             {...fieldProps("email")}
             type="email"
+            required
             autoComplete="email"
             maxLength={contactLimits.email}
             placeholder="name@example.com"
@@ -212,6 +157,7 @@ export function ContactForm({ deliveryConfigured, contactEmail }: ContactFormPro
           <label htmlFor="projectType">Project type</label>
           <select
             {...fieldProps("projectType")}
+            required
             onChange={(event) => updateField("projectType", event.target.value)}
           >
             <option value="">Choose a project type</option>
@@ -229,6 +175,7 @@ export function ContactForm({ deliveryConfigured, contactEmail }: ContactFormPro
           </div>
           <textarea
             {...fieldProps("message")}
+            required
             rows={5}
             maxLength={contactLimits.message}
             placeholder="Your goal, audience, and timeline"
@@ -239,50 +186,30 @@ export function ContactForm({ deliveryConfigured, contactEmail }: ContactFormPro
       </div>
 
       <div className="contact-form-footer">
-        <button className="primary-button" type="submit" disabled={status === "submitting"}>
+        <button className="primary-button" type="submit">
           {submitLabel}
           <ArrowUpRight aria-hidden="true" size={19} weight="regular" />
         </button>
         <div className="contact-status" aria-live="polite">
           {status === "invalid" && <p className="status-error">Review the highlighted fields and try again.</p>}
-          {status === "submitting" && <p>Sending your project details.</p>}
-          {status === "success" && (
-            <p className="status-success">Message sent. Your project details are now with Ali.</p>
-          )}
-          {status === "configuration-error" && (
-            <p className="status-error">
-              Delivery is not configured in this deployment.
-              {contactEmail ? " Please use the direct email link." : ""}
-            </p>
-          )}
-          {status === "rate-limited" && (
-            <p className="status-error">Too many attempts. Please wait ten minutes and try again.</p>
-          )}
-          {status === "error" && (
-            <p className="status-error">
-              The message could not be sent. Please try again
-              {contactEmail ? " or use the direct email link." : "."}
+          {status === "draft-opened" && (
+            <p className="status-success">
+              Email draft opened. Review the details, then press Send in your email app.
             </p>
           )}
           {status === "idle" && (
-            <p>
-              {deliveryConfigured
-                ? "Ready when you are."
-                : "The form will report honestly until delivery settings are configured."}
-            </p>
+            <p>Your details stay here until you choose Send in your email app.</p>
           )}
-          {contactEmail && (
-            <p className="direct-email">
-              Prefer email? <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
-            </p>
-          )}
+          <p className="direct-email">
+            Prefer email? <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+          </p>
         </div>
-        <div className="contact-lottie-slot" data-active={status === "success"}>
-          {status === "success" && (
+        <div className="contact-lottie-slot" data-active={status === "draft-opened"}>
+          {status === "draft-opened" && (
             <LottieVisual
               src="/lottie/contact-success.lottie"
               posterSrc="/lottie/contact-poster.svg"
-              label="Message delivered to Ali"
+              label="Email draft ready to send"
               playToken={playToken}
               className="contact-lottie"
             />

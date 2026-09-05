@@ -185,7 +185,7 @@ Controls and process slabs use a restrained 13px radius. Larger overlays and for
 
 ### Contact Delivery
 
-The form presents one continuous surface for idle, client validation, server validation, sending, configuration failure, rate limiting, provider failure, and success. Input is preserved on every recoverable error. A successful send resets the fields and plays the contact Lottie once. Builds without email credentials name the missing setup honestly and never simulate success.
+The form presents one continuous surface for idle, client validation, and email-draft-ready states. A valid desktop submission opens Gmail Compose in a new tab, while mobile preserves the default-email-app handoff. Both routes insert every field into a pre-addressed draft. Input remains in place after the handoff, and the interface says only that the draft opened because the site cannot know whether the visitor pressed Send. Preparing a draft plays the contact Lottie once.
 
 ### Navigation
 
