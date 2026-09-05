@@ -9,7 +9,8 @@ test("renders the complete, honest portfolio without horizontal overflow", async
   );
   await expect(page.locator("main > section")).toHaveCount(6);
   await expect(page.getByText("Ali Mahmood. Thoughtful websites, built for clarity.")).toBeVisible();
-  await expect(page.getByText("Concept project", { exact: true })).toHaveCount(3);
+  await expect(page.getByText("Concept project", { exact: true })).toHaveCount(4);
+  await expect(page.getByRole("heading", { name: "Lumina Botanics" })).toBeVisible();
   await expect(page.getByText(/pending/i)).toHaveCount(0);
 
   const widths = await page.evaluate(() => ({
@@ -102,9 +103,9 @@ test("concept notes load locally and restore focus", async ({ page }) => {
   const trigger = page.getByRole("button", { name: "Read concept notes" }).first();
   await trigger.click();
 
-  const dialog = page.getByRole("dialog", { name: "ServiceSpark concept notes" });
+  const dialog = page.getByRole("dialog", { name: "Lumina Botanics concept notes" });
   await expect(dialog).toBeVisible();
-  await expect(dialog.locator("#servicespark-notes-caption")).toHaveText(
+  await expect(dialog.locator("#luminabotanics-notes-caption")).toHaveText(
     "Local concept fixture. No public repository is attached.",
   );
   await expect(dialog.getByRole("heading", { name: "The design question" })).toBeVisible();

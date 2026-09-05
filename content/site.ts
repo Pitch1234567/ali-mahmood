@@ -3,6 +3,7 @@ import type { StaticImageData } from "next/image";
 import { resolveContactEmail } from "@/lib/contact";
 
 import focusFlowCover from "@/public/images/focusflow-cover.png";
+import luminaCommerceCover from "@/public/images/lumina-commerce-cover.png";
 import serviceSparkCover from "@/public/images/servicespark-cover.png";
 import tableReadyCover from "@/public/images/tableready-cover.png";
 
@@ -41,7 +42,11 @@ function emailLink(value: string | undefined): LinkState {
   return { status: "ready", label: email, href: `mailto:${email}` };
 }
 
-export type ProjectId = "servicespark" | "focusflow" | "tableready";
+export type ProjectId =
+  | "luminabotanics"
+  | "servicespark"
+  | "focusflow"
+  | "tableready";
 
 export interface Project {
   id: ProjectId;
@@ -136,6 +141,29 @@ export const services: Service[] = [
 
 export const projects: Project[] = [
   {
+    id: "luminabotanics",
+    title: "Lumina Botanics",
+    status: "concept",
+    summary:
+      "A premium botanical skincare store that turns product discovery, trust, and checkout into one calm shopping journey.",
+    focus: ["E-commerce UX", "Product discovery", "Mobile checkout"],
+    technologies: ["Next.js", "TypeScript", "Tailwind CSS"],
+    cover: luminaCommerceCover,
+    coverAlt:
+      "Concept product scene with amber skincare, charcoal packaging, stone soap, and a restrained cyan light path",
+    featured: true,
+    repository: externalLink(
+      process.env.NEXT_PUBLIC_LUMINABOTANICS_GITHUB_URL,
+      "View GitHub",
+      "Repository not published",
+    ),
+    liveSite: externalLink(
+      process.env.NEXT_PUBLIC_LUMINABOTANICS_LIVE_URL,
+      "Visit store",
+      "Live demo not published",
+    ),
+  },
+  {
     id: "servicespark",
     title: "ServiceSpark",
     status: "concept",
@@ -146,7 +174,7 @@ export const projects: Project[] = [
     cover: serviceSparkCover,
     coverAlt:
       "Concept preview of a dark architectural home with a cyan route leading to the entrance",
-    featured: true,
+    featured: false,
     repository: externalLink(
       process.env.NEXT_PUBLIC_SERVICESPARK_GITHUB_URL,
       "View GitHub",

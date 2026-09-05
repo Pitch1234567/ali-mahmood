@@ -27,7 +27,7 @@ The portfolio is a single-page website with six anchored sections: Home, About, 
 - The site is built with Next.js, React, TypeScript, and Tailwind CSS.
 - The first version is a polished frontend experience. It does not fetch GitHub data or store contact enquiries.
 - The contact form validates in the browser and opens a pre-addressed draft containing every completed field. Desktop opens Gmail Compose in a new tab; mobile preserves the existing default-email-app handoff. The visitor reviews the draft and presses Send.
-- ServiceSpark, FocusFlow, and TableReady are concept projects, not client work.
+- Lumina Botanics, ServiceSpark, FocusFlow, and TableReady are concept projects, not client work.
 - Missing GitHub, LinkedIn, repository, and live-site destinations are shown only as noninteractive pending states.
 - The page includes exactly two purposeful dotLottie moments with static fallbacks.
 - A hint of 3D means layered, responsive DOM composition rather than a WebGL scene.

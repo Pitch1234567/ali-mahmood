@@ -155,7 +155,7 @@ export default function Home() {
             <Reveal className="section-intro work-intro">
               <h2 id="work-title">Selected work, built with intention.</h2>
               <p className="section-lead">
-                Three concept projects show how I approach clarity, interaction, and responsive front-end craft. Each is labeled honestly.
+                Four concept projects show how I approach clarity, commerce, interaction, and responsive front-end craft. Each is labeled honestly.
               </p>
             </Reveal>
             <div className="project-gallery">

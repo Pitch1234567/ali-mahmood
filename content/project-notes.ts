@@ -1,6 +1,50 @@
 import type { ProjectId } from "./site";
 
 const notes: Record<ProjectId, string> = {
+  luminabotanics: `# Lumina Botanics
+
+> Local concept fixture. No public repository or live store is attached.
+
+Lumina Botanics explores a premium botanical skincare shop designed to make product discovery feel considered without slowing down the path to purchase.
+
+## The design question
+
+How can an e-commerce experience feel editorial and luxurious while keeping price, product benefits, cart state, and checkout actions immediately clear?
+
+## Decisions explored
+
+- Lead with tactile product imagery while keeping shopping actions unmistakable.
+- Organize discovery around skin needs instead of an overwhelming catalogue.
+- Keep cart feedback immediate and preserve context when the bag opens.
+- Reduce checkout friction with clear delivery, payment, and validation states.
+- Carry the same hierarchy from wide product stories to a compact mobile flow.
+
+## Commerce flow
+
+1. Discover a collection or shop by skin need.
+2. Compare concise product benefits and ingredients.
+3. Choose a variant and add it to the bag.
+4. Review delivery details before checkout.
+5. Complete a short, accessible payment flow.
+
+## Front-end focus
+
+| Area | Approach |
+| --- | --- |
+| Catalogue | Filterable, responsive product discovery |
+| Product page | Clear variants, benefits, and trust details |
+| Bag | Persistent state with immediate feedback |
+| Checkout | Labeled fields and recoverable validation |
+
+## Concept checklist
+
+- [x] Premium visual direction established
+- [x] Product discovery and bag flow mapped
+- [x] Mobile checkout hierarchy specified
+- [ ] Production catalogue connected
+- [ ] Payment provider connected
+- [ ] Repository and live store published
+`,
   servicespark: `# ServiceSpark
 
 > Local concept fixture. No public repository is attached.
