@@ -145,6 +145,11 @@ test("contact opens Gmail on desktop and preserves mailto on mobile", async ({ c
 
   await page.goto("/#contact");
 
+  await expect(
+    page.getByText("Your details stay here until you choose Send in your email app."),
+  ).toHaveCount(0);
+  await expect(page.getByText(/Prefer email\?/)).toHaveCount(0);
+
   await page.getByRole("button", { name: "Send project details" }).click();
   await expect(page.getByText("Review the highlighted fields and try again.")).toBeVisible();
   await expect(page.locator("#name")).toBeFocused();
@@ -193,7 +198,7 @@ test("contact opens Gmail on desktop and preserves mailto on mobile", async ({ c
       "Project enquiry: Business website from Ali Test",
     );
     await expect(popup!).toHaveTitle("Gmail Compose Test");
-    expect(await popup!.opener()).toBeNull();
+    expect(await popup!.evaluate(() => window.opener)).toBeNull();
   } else {
     expect(draft.protocol).toBe("mailto:");
     expect(draft.pathname).toBe("aalimahmood2006@gmail.com");

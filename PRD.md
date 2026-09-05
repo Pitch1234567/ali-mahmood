@@ -843,10 +843,6 @@ Make starting a conversation feel simple, safe, and worthwhile.
 
 > Send project details
 
-**Direct-contact line**
-
-> Prefer email? Write to [CONTACT_EMAIL].
-
 **Availability line**
 
 > Based in Pakistan · Available for remote projects

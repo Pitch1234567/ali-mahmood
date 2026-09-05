@@ -197,12 +197,6 @@ export function ContactForm({ contactEmail }: ContactFormProps) {
               Email draft opened. Review the details, then press Send in your email app.
             </p>
           )}
-          {status === "idle" && (
-            <p>Your details stay here until you choose Send in your email app.</p>
-          )}
-          <p className="direct-email">
-            Prefer email? <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
-          </p>
         </div>
         <div className="contact-lottie-slot" data-active={status === "draft-opened"}>
           {status === "draft-opened" && (

@@ -24,7 +24,7 @@ npm.cmd run build
 npm.cmd run test:e2e
 ```
 
-The Playwright suite uses Microsoft Edge and checks desktop and mobile layouts, navigation, keyboard focus restoration, local concept notes, client and server contact validation, honest delivery errors, accessibility, reduced motion, and horizontal overflow.
+The Playwright suite uses Microsoft Edge and checks desktop and mobile layouts, navigation, keyboard focus restoration, local concept notes, client and server contact validation, desktop Gmail Compose, mobile `mailto:`, accessibility, reduced motion, and horizontal overflow.
 
 ## Content and assets
 

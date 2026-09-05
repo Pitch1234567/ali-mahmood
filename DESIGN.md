@@ -181,7 +181,7 @@ Controls and process slabs use a restrained 13px radius. Larger overlays and for
 
 - **Style:** Dark translucent field, visible label, 52px minimum height, and a thin neutral stroke.
 - **Focus:** Cyan border with a restrained three-pixel outer wash.
-- **Error / Disabled:** Error uses the dedicated error color and inline recovery text. The submit button exposes a real disabled state during delivery.
+- **Error / Feedback:** Error uses the dedicated error color and inline recovery text. Across breakpoints, the idle footer stays free of extra copy; validation and draft-ready feedback appear only when relevant.
 
 ### Contact Delivery
 

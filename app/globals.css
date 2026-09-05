@@ -1227,12 +1227,6 @@ button:disabled {
 .contact-status .status-error { color: var(--error); }
 .contact-status .status-success { color: var(--success); }
 
-.direct-email a {
-  color: var(--accent);
-  font-weight: 680;
-  overflow-wrap: anywhere;
-}
-
 .contact-lottie-slot {
   width: 92px;
   min-height: 72px;
