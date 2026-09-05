@@ -157,7 +157,7 @@ test("contact opens Gmail on desktop and preserves mailto on mobile", async ({ c
   await page.locator("#name").fill("Ali Test");
   await page.locator("#email").fill("ali+website@example.com");
   await page.locator("#company").fill("Example Studio & Co.");
-  await page.locator("#projectType").selectOption("Business website");
+  await page.locator("#projectType").selectOption("E-commerce store");
   await page.locator("#message").fill(
     "I need a clear website for a small service business.\nPlease include mobile booking & an Urdu contact option.",
   );
@@ -195,7 +195,7 @@ test("contact opens Gmail on desktop and preserves mailto on mobile", async ({ c
     expect(draft.searchParams.get("fs")).toBe("1");
     expect(draft.searchParams.get("to")).toBe("aalimahmood2006@gmail.com");
     expect(draft.searchParams.get("su")).toBe(
-      "Project enquiry: Business website from Ali Test",
+      "Project enquiry: E-commerce store from Ali Test",
     );
     await expect(popup!).toHaveTitle("Gmail Compose Test");
     expect(await popup!.evaluate(() => window.opener)).toBeNull();
@@ -203,20 +203,20 @@ test("contact opens Gmail on desktop and preserves mailto on mobile", async ({ c
     expect(draft.protocol).toBe("mailto:");
     expect(draft.pathname).toBe("aalimahmood2006@gmail.com");
     expect(draft.searchParams.get("subject")).toBe(
-      "Project enquiry: Business website from Ali Test",
+      "Project enquiry: E-commerce store from Ali Test",
     );
   }
 
   const subject = draft.searchParams.get(desktop ? "su" : "subject");
   expect(subject).toBe(
-    "Project enquiry: Business website from Ali Test",
+    "Project enquiry: E-commerce store from Ali Test",
   );
 
   const body = draft.searchParams.get("body");
   expect(body).toContain("Name: Ali Test");
   expect(body).toContain("Email: ali+website@example.com");
   expect(body).toContain("Company: Example Studio & Co.");
-  expect(body).toContain("Project type: Business website");
+  expect(body).toContain("Project type: E-commerce store");
   expect(body).toContain(
     "Project details:\r\nI need a clear website for a small service business.\r\nPlease include mobile booking & an Urdu contact option.",
   );

@@ -854,7 +854,7 @@ Make starting a conversation feel simple, safe, and worthwhile.
 | Name | Text | Yes | “What should I call you?” |
 | Email | Email | Yes | “you@company.com” |
 | Company | Text | No | “Company or brand” |
-| Project type | Select | Yes | Business website, landing page, portfolio, redesign, other |
+| Project type | Select | Yes | Business website, e-commerce store, landing page, portfolio website, website redesign, ongoing maintenance |
 | Budget range | Select | No | Use ranges Ali approves before launch |
 | Message | Textarea | Yes | “Tell me about the goal, audience, and timeline.” |
 | Website | Honeypot | Hidden | Spam protection; real users should leave empty |

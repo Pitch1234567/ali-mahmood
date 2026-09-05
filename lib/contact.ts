@@ -1,5 +1,6 @@
 export const projectTypes = [
   "Business website",
+  "E-commerce store",
   "Landing page",
   "Portfolio website",
   "Website redesign",
