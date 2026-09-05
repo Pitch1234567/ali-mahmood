@@ -174,7 +174,7 @@ export const projects: Project[] = [
     cover: serviceSparkCover,
     coverAlt:
       "Concept preview of a dark architectural home with a cyan route leading to the entrance",
-    featured: false,
+    featured: true,
     repository: externalLink(
       process.env.NEXT_PUBLIC_SERVICESPARK_GITHUB_URL,
       "View GitHub",

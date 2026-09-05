@@ -62,7 +62,7 @@ function ProjectBody({ project }: { project: Project }) {
 
 export default function Home() {
   const year = new Date().getFullYear();
-  const featuredProject = projects.find((project) => project.featured)!;
+  const featuredProjects = projects.filter((project) => project.featured);
   const supportingProjects = projects.filter((project) => !project.featured);
   const profileLinks = [siteProfile.email, siteProfile.github, siteProfile.linkedin].filter(
     (link): link is Extract<LinkState, { status: "ready" }> => link.status === "ready",
@@ -159,11 +159,15 @@ export default function Home() {
               </p>
             </Reveal>
             <div className="project-gallery">
-              <Reveal className="featured-project-wrap">
-                <TiltCard className="project-entry project-featured">
-                  <ProjectBody project={featuredProject} />
-                </TiltCard>
-              </Reveal>
+              <div className="featured-projects">
+                {featuredProjects.map((project) => (
+                  <Reveal key={project.id} className="featured-project-wrap">
+                    <TiltCard className="project-entry project-featured">
+                      <ProjectBody project={project} />
+                    </TiltCard>
+                  </Reveal>
+                ))}
+              </div>
               <div className="supporting-projects">
                 {supportingProjects.map((project, index) => (
                   <Reveal key={project.id} delay={0.08 * (index + 1)}>

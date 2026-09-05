@@ -953,6 +953,7 @@ button:disabled {
   font-size: 0.72rem;
 }
 
+.featured-projects,
 .supporting-projects {
   display: grid;
   gap: clamp(3rem, 5vw, 5rem);
@@ -1716,6 +1717,7 @@ button:disabled {
     aspect-ratio: 16 / 10;
   }
 
+  .featured-projects,
   .supporting-projects {
     gap: 3.75rem;
   }
